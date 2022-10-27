@@ -1,0 +1,21 @@
+Results summary:Vulnerability - Type - Occurrences - Severity
+Stored XSS All Clients 3 High
+CGI XSS 2 High
+Reflected XSS All Clients 2 High
+Denial Of Service Resource Exhaustion 121 Medium
+Race Condition Concurrent Instances 25 Medium
+Path Traversal 11 Medium
+Use of Cryptographically Weak PRNG 3 Medium
+Missing HSTS Header 1 Medium
+Privacy Violation 1 Medium
+PAGE 30 OF 133
+Improper Error Handling 518 Low
+Missing Content Security Policy 1 Low
+Use of Hardcoded Password 1 Low
+
+
+The application's func embeds untrusted data in the generated output with Set, at line 268 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go. This untrusted data is embedded straight into the output without proper sanitization or encoding, enabling an attacker to inject malicious code into the output.
+
+The attacker would be able to alter the output data by simply sending modified values in the user input Header, which is read by the NewServerHandlerTransport method at line 59 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go. This input then flows through the code, and written to the console or STDOUT, without sanitization. In some scenarios, this output will also be sent back to the user's browser. 
+
+This can enable a Reflected Cross-Site Scripting (XSS) attack if the code's console output is used by the application as part of a web-page, as often occurs with CGI scripts.
