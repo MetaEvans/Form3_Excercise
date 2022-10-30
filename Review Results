@@ -43,6 +43,16 @@ Stored_XSS_ALL_Clients(3:FOUND)
   The attacker would be able to alter the returned web page by saving malicious data in a data-store ahead of time. 
   The attacker's modified data is then read from the database by the decompress method with ReadAll, at line 749 of innsecure\vendor\google.golang.org\grpc\rpc_util.go. 
   This untrusted data then flows through the code straight to the output web page, without sanitization. 
+  
+  Remediation:
+  
+String regEx_script = "<[\\s]*?script[^>]*?>[\\s\\S]*?<[\\s]*?\\/[\\s]*?script[\\s]*?>"; 
+NewServerHandlerTransport N = new NewServerHandlerTransport
+N.set(XXXXXX)
+N.set(XXXXXX)
+return N
+
+  
 
 MEDIUM RISKS:
 
@@ -53,6 +63,8 @@ Denial_of_Service_Resource_Exhaustion(121:FOUND)
 Missing_HSTS_Header(1:FOUND)
 - at line 210 is prone to resource exhaustion when used by func in the file innsecure\vendor\golang.org\x\net\idna\idna10.0.0.go at line 210
 The web-application does not define an HSTS header, leaving it vulnerable to attack.
+
+Remediation: add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
 Path_Traversal(11:FOUND)
 - Method ParseURL at line 33 of innsecure\vendor\github.com\lib\pq\url.go gets dynamic data from the Parse element. This element’s value then flows through the code and is eventually used in a file path for local disk access in func at line 983 of innsecure\vendor\github.com\lib\pq\conn.go. 
