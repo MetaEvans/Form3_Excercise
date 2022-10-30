@@ -19,3 +19,52 @@ The application's func embeds untrusted data in the generated output with Set, a
 The attacker would be able to alter the output data by simply sending modified values in the user input Header, which is read by the NewServerHandlerTransport method at line 59 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go. This input then flows through the code, and written to the console or STDOUT, without sanitization. In some scenarios, this output will also be sent back to the user's browser. 
 
 This can enable a Reflected Cross-Site Scripting (XSS) attack if the code's console output is used by the application as part of a web-page, as often occurs with CGI scripts.
+HIGH RISKS:
+
+The attacker would be able to alter the output data by simply sending modified values in the user input Header, which is read by the NewServerHandlerTransport method at line 59 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go. This input then flows through the code, and written to the console or STDOUT, without sanitization. In some scenarios, this output will also be sent back to the user's browser. 
+CGI_XSS(2:FOUND) and Reflected_XSS_ALL_Clients(2:FOUND)
+
+This can enable a Reflected Cross-Site Scripting (XSS) attack if the code's console output is used by the application as part of a web-page, as often occurs with CGI scripts.
+- at line 268 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go. 
+- at line 256 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go. 
+  This untrusted data is embedded straight into the output without proper sanitization or encoding, enabling an attacker to inject malicious code into the output.
+  The attacker would be able to alter the output data by simply sending modified values in the user input Header, which is read by the NewServerHandlerTransport method at line 59 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go. 
+  This input then flows through the code, and written to the console or STDOUT, without sanitization. In some scenarios, this output will also be sent back to the user's browser. 
+  This can enable a Reflected Cross-Site Scripting (XSS) attack if the code's console output is used by the application as part of a web-page, as often occurs with CGI scripts.
+
+Stored_XSS_ALL_Clients(3:FOUND)
+- at line 213 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go.
+- at line 201 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go.
+- at line 203 of innsecure\vendor\google.golang.org\grpc\internal\transport\handler_server.go.
+  This untrusted data is embedded straight into the output without proper sanitization or encoding, enabling an attacker to inject malicious code into the output.
+  The attacker would be able to alter the returned web page by saving malicious data in a data-store ahead of time. 
+  The attacker's modified data is then read from the database by the decompress method with ReadAll, at line 749 of innsecure\vendor\google.golang.org\grpc\rpc_util.go. 
+  This untrusted data then flows through the code straight to the output web page, without sanitization. 
+
+LOW RISKS:
+
+
+Denial_of_Service_Resource_Exhaustion(121:FOUND)
+- at line 1473 is prone to resource exhaustion when used by func in the file innsecure\vendor\golang.org\x\net\idna\idna10.0.0.go at line 312,313,322,357,365,356
+- at line 1475 is prone to resource exhaustion when used by func in the file innsecure\vendor\golang.org\x\net\idna\idna10.0.0.go at line 312,313,322
+
+Missing_HSTS_Header(1:FOUND)
+- at line 210 is prone to resource exhaustion when used by func in the file innsecure\vendor\golang.org\x\net\idna\idna10.0.0.go at line 210
+The web-application does not define an HSTS header, leaving it vulnerable to attack.
+
+Path_Traversal(11:FOUND)
+- Method ParseURL at line 33 of innsecure\vendor\github.com\lib\pq\url.go gets dynamic data from the Parse element. This element’s value then flows through the code and is eventually used in a file path for local disk access in func at line 983 of innsecure\vendor\github.com\lib\pq\conn.go. 
+This may cause a Path Traversal vulnerability.
+
+Privacy_Violation(1:FOUND)
+- Method func at line 464 of innsecure\vendor\golang.org\x\net\http2\server.go sends user information outside the application. 
+This may constitute a Privacy Violation.
+
+Race_Condition_Concurrent_Instance(25:FOUND)
+- The concurrent process getEventFamily found in the file innsecure\vendor\golang.org\x\net\trace\events.go 
+- at line 159 influences the shared resource families in the file innsecure\vendor\golang.org\x\net\trace\events.go at line 159
+When performed concurrently, an unexpected race condition may occur.
+
+Use_of_Cryptographically_Weak_PRNG(3:FOUND)
+- Method func at line 486 of innsecure\vendor\golang.org\x\net\http2\transport.go uses a weak method Float64 to produce random values. 
+These values are then used as cryptographic variables by func at line 486 in innsecure\vendor\golang.org\x\net\http2\transport.go.
